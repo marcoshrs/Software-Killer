@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:body>
+	<ui:composition template="../../resources/template/template-administrador.xhtml">
+		<ui:define name="mensagem">
+			<ui:include src="../../componentes/mensagem.xhtml" />
+		</ui:define>
+		<ui:define name="modal-confirmacao">
+			<ui:include src="../../componentes/dialog-confirmacao.xhtml" />
+		</ui:define>
+	
+	<ui:define name="conteudo">	
+		<!-- TITULO -->
+	<div class="row">
+		<div class="col-md-12">
+			<h1 class="page-header">Cadastro de Usuários</h1>
+
+		</div>
+	</div>
+	<!-- FIM TITULO -->
+
+	<!-- BOTAO CADASTRAR -->
+	<div class="row container-fluid">
+		<div class="col-md-12">
+			<ol class="breadcrumb">
+				<h:form id="frmCadastrar">
+					<p:commandButton 
+						value="Cadastrar" update=":frmModalSalvar" actionListener="#{usuarioMB.criarNovoObjeto()}"
+						onclick="PF('dlgCadastrar').show(); PF('dlgCadastrar').content.scrollTop('0')"
+						title="Cadastrar" />
+						
+						<p:commandButton 
+						value="Emitir Relatorio" actionListener="#{usuarioMB.imprimirRelatorioUsuario()}"
+						ajax="false"
+						title="Emitir Relatorio"/>
+						
+				</h:form>
+			</ol>
+		</div>
+	</div>
+	<!-- FIM DO BOTAO CADASTRAR -->
+	<!-- TABELA-->
+	<div class="col-md-12">
+		<h:form id="frmTabela">
+			<p:dataTable id="tabela" value="#{usuarioMB.listaUsuario}"
+				resizableColumns="true" reflow="true" var="list" rows="10"
+				paginator="true" paginatorPosition="bottom"
+				emptyMessage="Nenhum usuário cadastrado"
+				rowsPerPageTemplate="5,10,15,30,50,100">
+				
+				<p:column headerText="Usuario" filterBy="#{list.nome}"
+					sortBy="#{list.nome}" filterMatchMode="contains">
+					<h:outputText value="#{list.nome}" />
+				</p:column>
+				
+				<p:column headerText="CPF" filterBy="#{list.cpf}"
+					sortBy="#{list.cpf}" filterMatchMode="contains">
+					<h:outputText value="#{list.cpf}" />
+				</p:column>
+				
+				<p:column headerText="Endereço" filterBy="#{list.endereco}"
+					sortBy="#{list.endereco}" filterMatchMode="contains">
+					<h:outputText value="#{list.endereco}" />
+				</p:column>
+				
+				<p:column headerText="Nº" filterBy="#{list.numero}"
+					sortBy="#{list.numero}" filterMatchMode="contains">
+					<h:outputText value="#{list.numero}" />
+				</p:column>
+				
+				<p:column headerText="Bairro" filterBy="#{list.bairro}"
+					sortBy="#{list.bairro}" filterMatchMode="contains">
+					<h:outputText value="#{list.bairro}" />
+				</p:column>
+				
+				<p:column headerText="Telefone" filterBy="#{list.telefone}"
+					sortBy="#{list.telefone}" filterMatchMode="contains">
+					<h:outputText value="#{list.telefone}" />
+				</p:column>
+				
+				<p:column headerText="Perfil" filterBy="#{list.perfil}"
+					sortBy="#{list.perfil}" filterMatchMode="contains">
+					<h:outputText value="#{list.perfil}" />
+				</p:column>	
+				
+				<p:column headerText="Email" filterBy="#{list.email}"
+					sortBy="#{list.email}" filterMatchMode="contains">
+					<h:outputText value="#{list.email}" />
+				</p:column>	
+				
+				
+				
+				<p:column headerText="Cidade" filterBy="#{list.cidade.nome}"
+					sortBy="#{list.cidade.nome}" filterMatchMode="contains">
+					<h:outputText value="#{list.cidade.nome}" />
+				</p:column>
+				
+				<p:column headerText="Estado" filterBy="#{list.estado.sigla}"
+					sortBy="#{list.estado.sigla}" filterMatchMode="contains">
+					<h:outputText value="#{list.estado.sigla}" />
+				</p:column>
+				
+				
+				<p:column headerText="Alterar" style="width:68px">
+					<p:commandButton disabled="false" alt="Alterar" icon="ui-icon-pencil"
+						update=":frmModalSalvar" title="Alterar"
+						styleClass="btn btn-block" oncomplete="PF('dlgCadastrar').show();"
+						actionListener="#{usuarioMB.preencherListaUsuario(list)}">
+
+					</p:commandButton>
+				</p:column>
+				<!--  <p:column headerText="Excluir" style="width:68px">
+					<p:commandButton disabled="false"
+						actionListener="#{usuarioMB.inativarUsuario(list)}"
+						icon="ui-icon-trash" title="Excluir" styleClass="btn btn-block"
+						update=":frmTabela :dlgInformacao" alt="Excluir">
+						<p:confirm header="Confirmação" message="Deseja excluir?" />
+					</p:commandButton>
+				</p:column>-->
+				
+				
+				
+			</p:dataTable>
+		</h:form>
+
+	</div>
+	<!--FIM DA TABELA-->
+
+	<!-- DIALOG SALVAR -->
+	<p:dialog header="Cadastrar Usuário" widgetVar="dlgCadastrar"
+		modal="true" responsive="true" width="60%" id="dlgCadastrar"
+		closable="true" closeOnEscape="true" resizable="true"
+		draggable="false">
+		<h:form id="frmModalSalvar">
+			<div class="ui-fluid">
+				<div class="col-md-12">
+					<label>Nome do Usuário: *</label>
+					<p:inputText title="Usuario" value="#{usuarioMB.usuario.nome}" validator="validacaoNome"
+					required="true" requiredMessage="Campo nome vazio, favor informar o nome." placeholder="Insira o nome completo..."/>
+				</div>
+				
+				<div class="col-md-12">
+					<label>CPF: *</label>
+					<p:inputText title="CPF" value="#{usuarioMB.usuario.cpf}" 
+					required="true" requiredMessage="Campo cpf vazio, favor informar o nome." placeholder="000.000.000-00"/>
+				</div>
+				
+				<div class="col-md-12">
+					<label>Endereço: *</label>
+					<p:inputText title="Endereço" value="#{usuarioMB.usuario.endereco}" 
+					required="true" requiredMessage="Campo cnpj vazio, favor informar o nome." placeholder="..."/>
+				</div>
+				
+				<div class="col-md-12">
+					<label>Nº: *</label>
+					<p:inputText title="Bairro" value="#{usuarioMB.usuario.numero}" 
+					required="true" requiredMessage="Campo cnpj vazio, favor informar o nome." placeholder="..."/>
+				</div>
+				
+				<div class="col-md-12">
+					<label>Bairro: *</label>
+					<p:inputText title="CNPJ" value="#{usuarioMB.usuario.bairro}" 
+					required="true" requiredMessage="Campo cnpj vazio, favor informar o nome." placeholder="..."/>
+				</div>
+				
+				<div class="col-md-12">
+					<label>Telefone: *</label>
+					<p:inputText title="Telefone" value="#{usuarioMB.usuario.telefone}" 
+					required="true" requiredMessage="Campo cnpj vazio, favor informar o nome." placeholder="..."/>
+				</div>
+				
+				<div class="col-md-12">
+				<label>Perfil: *</label>
+							<p:selectOneMenu id="console"
+								value="#{usuarioMB.usuario.perfil}" >
+								<f:selectItem itemLabel="Selecionar..." itemValue="" />
+								<f:selectItem itemLabel="Administrativo" itemValue="Administrativo" />
+								<f:selectItem itemLabel="Caixa" itemValue="Caixa" />
+								<f:selectItem itemLabel="RH" itemValue="RH" />
+								<f:selectItem itemLabel="Vendedor" itemValue="Vendedor" />
+							</p:selectOneMenu>
+				</div>
+				
+				<div class="col-md-12">
+					<label>Email: *</label>
+					<p:inputText title="Nome" value="#{usuarioMB.usuario.email}" validator="validacaoEmail" 
+					required="true" requiredMessage="Campo email vazio, favor informar o email." placeholder="Ex: exemplo@exemplo.com.br"/>
+				</div>		
+				
+				<div class="col-md-12">
+						<label>Estado: *</label>
+						<p:selectOneMenu converter="#{estadoConverter}" title="Estado"
+							value="#{usuarioMB.usuario.estado}">
+							<f:selectItems value="#{estadoMB.listaEstado}" var="estado"
+								itemLabel="#{estado.nome}" itemValue="#{estado}" />
+						</p:selectOneMenu>
+					</div>
+				
+				
+				<div class="col-md-12">
+					<label>Cidade: *</label>
+					<p:selectOneMenu converter="#{cidadeConverter}" title="Cidade"
+							value="#{usuarioMB.usuario.cidade}">
+							<f:selectItems value="#{cidadeMB.listaCidade}" var="cidade"
+								itemLabel="#{cidade.nome}" itemValue="#{cidade}" />
+						</p:selectOneMenu>
+				</div>
+				
+						
+				<div class="col-md-12">
+					<label>Senha: *</label>					                 
+				    <p:password id="pwd1" value="#{usuarioMB.usuario.senha}" match="pwd2" label="Senha" required="true" 
+				    requiredMessage="Campo senha vazio, favor informar a senha." feedback="true"/>
+				 	
+				 	<label>Confirmar senha: *</label>	        
+				    <p:password id="pwd2" value="#{usuarioMB.usuario.senha}" label="Confirmar senha" required="true" 
+				     requiredMessage="Campo confirmar senha vazio, favor confirmar a senha"/>
+				    
+				</div>
+										
+				<small>Campos obrigatórios *</small>
+			</div>
+			<div class="modal-footer">
+				<p:commandButton value="Salvar" actionListener="#{usuarioMB.salvar()}" styleClass="ui-priority-primary"
+					 update=":dlgInformacao :frmTabela" />
+
+				<p:commandButton value="Cancelar"
+					onclick="PF('dlgCadastrar').hide();" alt="Cancelar" />
+			</div>
+		</h:form>
+	</p:dialog>
+	<!-- FIM DO DIALOG SALVAR -->
+		</ui:define>
+		
+	</ui:composition>
+</h:body>
+</html>
+
